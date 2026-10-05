@@ -3,11 +3,12 @@ package com.example.springbootdemo;
 import com.example.springbootdemo.common.Result;
 import com.example.springbootdemo.entity.User;
 import com.example.springbootdemo.exception.BusinessException;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -19,7 +20,10 @@ public class UserController {
 
     @GetMapping("/{id}")
     public Result<String> getUserById(@PathVariable int id) {
+        log.info("查询用户，id = {}", id);
+        log.debug("进入 getUserById 方法");
         if (id <= 0) {
+            log.warn("非法 id：{}", id);
             throw new BusinessException(400, "ID 必须大于 0");
         }
         return Result.success("查询用户 ID：" + id);
@@ -30,18 +34,20 @@ public class UserController {
         return Result.success("搜索关键字：" + keyword);
     }
 
-    @PostMapping
-    public Result<String> addUser(@RequestBody User user) {
-        return Result.success("新增用户：" + user.getName() + "，年龄 " + user.getAge());
-    }
+
 
     @PutMapping("/{id}")
-    public Result<String> updateUser(@PathVariable int id, @RequestBody User user) {
+    public Result<String> updateUser(@PathVariable int id, @Valid @RequestBody User user) {
         return Result.success("修改 ID " + id + " 的用户为：" + user.getName());
     }
-
+    @PostMapping
+    public Result<String> addUser(@Valid @RequestBody User user) {
+        log.info("新增用户：{}", user.getName());
+        return Result.success("新增用户：" + user.getName() + "，年龄 " + user.getAge());
+    }
     @DeleteMapping("/{id}")
     public Result<String> deleteUser(@PathVariable int id) {
+        log.info("删除用户，id = {}", id);
         return Result.success("删除用户 ID：" + id);
     }
 

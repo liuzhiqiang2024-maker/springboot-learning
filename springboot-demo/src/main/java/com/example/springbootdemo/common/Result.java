@@ -25,4 +25,5 @@ public class Result <T>{
     public void setCode(int code) {this.code = code;}
     public T getData() {return data;}
     public void setData(T data) {this.data = data;}
+    public String getMessage() {return message;}
 }
