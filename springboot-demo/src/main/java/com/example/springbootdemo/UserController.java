@@ -2,70 +2,55 @@ package com.example.springbootdemo;
 
 import com.example.springbootdemo.common.Result;
 import com.example.springbootdemo.entity.User;
-import com.example.springbootdemo.exception.BusinessException;
+import com.example.springbootdemo.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    @GetMapping("/test-error")
-    public Result<String> testError() {
-        throw new BusinessException(400, "测试业务异常");
-    }
+    @Autowired
+    private UserService userService;
 
-    @GetMapping("/{id}")
-    public Result<String> getUserById(@PathVariable int id) {
-        log.info("查询用户，id = {}", id);
-        log.debug("进入 getUserById 方法");
-        if (id <= 0) {
-            log.warn("非法 id：{}", id);
-            throw new BusinessException(400, "ID 必须大于 0");
-        }
-        return Result.success("查询用户 ID：" + id);
-    }
-
-    @GetMapping("/search")
-    public Result<String> search(@RequestParam String keyword) {
-        return Result.success("搜索关键字：" + keyword);
-    }
-
-
-
-    @PutMapping("/{id}")
-    public Result<String> updateUser(@PathVariable int id, @Valid @RequestBody User user) {
-        return Result.success("修改 ID " + id + " 的用户为：" + user.getName());
-    }
-    @PostMapping
-    public Result<String> addUser(@Valid @RequestBody User user) {
-        log.info("新增用户：{}", user.getName());
-        return Result.success("新增用户：" + user.getName() + "，年龄 " + user.getAge());
-    }
-    @DeleteMapping("/{id}")
-    public Result<String> deleteUser(@PathVariable int id) {
-        log.info("删除用户，id = {}", id);
-        return Result.success("删除用户 ID：" + id);
-    }
-
-    @GetMapping("/one")
-    public Result<User> oneUser() {
-        User u = new User();
-        u.setName("张三");
-        u.setAge(20);
-        return Result.success(u);
-    }
-
+    // 查询所有
     @GetMapping("/list")
     public Result<List<User>> list() {
-        List<User> list = new ArrayList<>();
-        User u1 = new User(); u1.setName("张三"); u1.setAge(20);
-        User u2 = new User(); u2.setName("李四"); u2.setAge(22);
-        list.add(u1);
-        list.add(u2);
-        return Result.success(list);
+        log.info("查询所有用户");
+        return Result.success(userService.findAll());
+    }
+
+    // 根据 ID 查询
+    @GetMapping("/{id}")
+    public Result<User> getById(@PathVariable Integer id) {
+        log.info("查询用户，id = {}", id);
+        return Result.success(userService.findById(id));
+    }
+
+    // 新增
+    @PostMapping
+    public Result<User> add(@Valid @RequestBody User user) {
+        log.info("新增用户：{}", user.getName());
+        return Result.success(userService.add(user));
+    }
+
+    // 修改
+    @PutMapping("/{id}")
+    public Result<User> update(@PathVariable Integer id, @Valid @RequestBody User user) {
+        log.info("修改用户，id = {}", id);
+        return Result.success(userService.update(id, user));
+    }
+
+    // 删除
+    @DeleteMapping("/{id}")
+    public Result<Void> delete(@PathVariable Integer id) {
+        log.info("删除用户，id = {}", id);
+        userService.delete(id);
+        return Result.success();
     }
 }
