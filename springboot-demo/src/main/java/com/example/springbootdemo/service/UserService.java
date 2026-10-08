@@ -1,6 +1,7 @@
 package com.example.springbootdemo.service;
 import com.example.springbootdemo.entity.User;
 import java.util.List;
+import java.math.BigDecimal;
 public interface UserService {
     User add(User user);
     User update(Integer id, User user);
@@ -10,4 +11,5 @@ public interface UserService {
     List<User> findByPage(int page,int size);
     List<User> findByNameLike(String keyword);
     List<User> search(String name, Integer minAge, Integer maxAge);
+    void transfer(Integer fromId, Integer toId, BigDecimal amount);
 }

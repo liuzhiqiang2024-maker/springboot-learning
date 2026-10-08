@@ -1,6 +1,6 @@
 package com.example.springbootdemo.entity;
 import jakarta.validation.constraints.*;
-
+import java.math.BigDecimal;
 public class User {
     private  Integer id;
     @NotBlank(message = "用户名不能为空")
@@ -29,4 +29,8 @@ public class User {
     public String toString() {
         return "User{id=" + id + ", name=" + name + ", age=" + age + "}";
     }
+    private BigDecimal money;
+
+    public BigDecimal getMoney() { return money; }
+    public void setMoney(BigDecimal money) { this.money = money; }
 }

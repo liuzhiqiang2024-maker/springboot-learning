@@ -19,6 +19,14 @@
         UPDATE user SET name = #{name}, age = #{age} WHERE id = #{id}
     </update>
 
+    <update id="deductMoney">
+        UPDATE user SET money = money - #{amount} WHERE id = #{id}
+    </update>
+
+    <update id="addMoney">
+        UPDATE user SET money = money + #{amount} WHERE id = #{id}
+    </update>
+
     <select id="findByPage" resultType="User">
         SELECT *FROM user LIMIT #{offset},#{size}
     </select>

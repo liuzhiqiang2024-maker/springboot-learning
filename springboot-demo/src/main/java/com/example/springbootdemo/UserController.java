@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -37,6 +37,16 @@ public class UserController {
     public Result<User> add(@Valid @RequestBody User user) {
         log.info("新增用户：{}", user.getName());
         return Result.success(userService.add(user));
+    }
+
+    @PostMapping("/transfer")
+    public Result<Void> transfer(
+            @RequestParam Integer fromId,
+            @RequestParam Integer toId,
+            @RequestParam BigDecimal amount) {
+        log.info("转账请求：from={}, to={}, amount={}", fromId, toId, amount);
+        userService.transfer(fromId, toId, amount);
+        return Result.success();
     }
 
     // 修改

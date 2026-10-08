@@ -1,0 +1,1 @@
+SELECT id, name, money FROM user WHERE id IN (1, 2);

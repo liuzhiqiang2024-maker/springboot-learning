@@ -2,7 +2,7 @@ package com.example.springbootdemo.mapper;
 import com.example.springbootdemo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
+import java.math.BigDecimal;
 import java.util.List;
 @Mapper
 
@@ -12,6 +12,8 @@ public interface UserMapper {
     int insert(User user);
     int update(User user);
     int deleteById(Integer id);
+    int deductMoney(@Param("id") Integer id, @Param("amount") BigDecimal amount);
+    int addMoney(@Param("id") Integer id, @Param("amount") BigDecimal amount);
     List<User> findByPage(@Param("offset")int offset,@Param("size")int size);
     List<User> findByNameLike(@Param("keyword")String keyword);
     List<User>search(@Param("name")String name,
