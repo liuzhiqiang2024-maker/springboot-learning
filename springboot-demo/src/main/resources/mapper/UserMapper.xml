@@ -19,6 +19,29 @@
         UPDATE user SET name = #{name}, age = #{age} WHERE id = #{id}
     </update>
 
+    <select id="findByPage" resultType="User">
+        SELECT *FROM user LIMIT #{offset},#{size}
+    </select>
+
+    <select id="findByNameLike" resultType="User">
+        SELECT * FROM user WHERE name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="search" resultType="User">
+        SELECT * FROM user
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="minAge != null">
+                AND age &gt;= #{minAge}
+            </if>
+            <if test="maxAge != null">
+                AND age &lt;= #{maxAge}
+            </if>
+        </where>
+    </select>
+
     <delete id="deleteById">
         DELETE FROM user WHERE id = #{id}
     </delete>

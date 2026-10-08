@@ -53,4 +53,27 @@ public class UserController {
         userService.delete(id);
         return Result.success();
     }
+
+    @GetMapping("/search-advanced")
+    public  Result<List<User>> searchAdvanced(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer minAge,
+            @RequestParam(required = false) Integer maxAge) {
+        log.info("高级搜索：name={},mingAge={},maxgAge={}", name,minAge,maxAge);
+        return Result.success(userService.search(name,minAge,maxAge));
+    }
+
+    @GetMapping("/search")
+    public Result<List<User>> searchByName(@RequestParam String keyword) {
+        log.info("模糊搜索：{}", keyword);
+        return Result.success(userService.findByNameLike(keyword));
+    }
+
+    @GetMapping("/page")
+    public Result<List<User>> page(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        log.info("分页查询：page={}, size={}", page, size);
+        return Result.success(userService.findByPage(page, size));
+    }
 }

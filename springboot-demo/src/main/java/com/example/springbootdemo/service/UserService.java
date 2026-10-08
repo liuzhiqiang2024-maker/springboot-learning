@@ -7,4 +7,7 @@ public interface UserService {
     void delete(Integer id);
     List<User> findAll();
     User findById(Integer id);
+    List<User> findByPage(int page,int size);
+    List<User> findByNameLike(String keyword);
+    List<User> search(String name, Integer minAge, Integer maxAge);
 }

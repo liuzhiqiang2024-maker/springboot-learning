@@ -54,4 +54,19 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userMapper.findAll();
     }
+    @Override
+    public List<User> findByPage(int page, int size) {
+        int offset = (page - 1) * size;
+        return userMapper.findByPage(offset, size);
+    }
+
+    @Override
+    public List<User> findByNameLike(String keyword) {
+        return userMapper.findByNameLike(keyword);
+    }
+
+    @Override
+    public List<User> search(String name, Integer minAge, Integer maxAge) {
+        return userMapper.search(name, minAge, maxAge);
+    }
 }
