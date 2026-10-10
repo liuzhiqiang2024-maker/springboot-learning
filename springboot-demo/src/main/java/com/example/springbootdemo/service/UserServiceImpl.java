@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.springbootdemo.util.JwtUtil;
+import com.example.springbootdemo.util.PasswordUtil;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +23,42 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
         log.info("新增用户：{}", user);
         return user;
+    }
+
+    @Override
+    public User register(User user) {
+        // 1. 检查用户名是否已存在
+        User exist=userMapper.findByName(user.getName());
+        if(exist!=null){
+            throw new BusinessException(400,"用户名已存在");
+        }
+        // 2. 密码加密
+        String encodePassword= PasswordUtil.encode(user.getPassword());
+        user.setPassword(encodePassword);
+        // 3. 插入数据库
+        userMapper.insert(user);
+        // 4. 返回时不带密码
+        user.setPassword(null);
+        log.info("注册成功：{}", user.getName());
+        return user;
+    }
+    @Override
+    public String login(String name, String password) {
+        // 1. 查用户
+        User user = userMapper.findByName(name);
+        if (user == null) {
+            throw new BusinessException(400, "用户名或密码错误");
+        }
+
+        // 2. 校验密码
+        if (!PasswordUtil.matches(password, user.getPassword())) {
+            throw new BusinessException(400, "用户名或密码错误");
+        }
+
+        // 3. 生成 JWT
+        String token = JwtUtil.generateToken(user.getId(), user.getName());
+        log.info("登录成功：{}", name);
+        return token;
     }
 
     @Override

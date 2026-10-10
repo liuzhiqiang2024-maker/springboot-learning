@@ -49,6 +49,19 @@ public class UserController {
         return Result.success();
     }
 
+    @PostMapping("/register")
+    public Result<User> register(@Valid @RequestBody User user) {
+        log.info("注册请求：{}", user.getName());
+        return Result.success(userService.register(user));
+    }
+
+    @PostMapping("/login")
+    public Result<String> login(@RequestBody User user) {
+        log.info("登录请求：{}", user.getName());
+        String token = userService.login(user.getName(), user.getPassword());
+        return Result.success(token);
+    }
+
     // 修改
     @PutMapping("/{id}")
     public Result<User> update(@PathVariable Integer id, @Valid @RequestBody User user) {

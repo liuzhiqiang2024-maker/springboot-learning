@@ -12,4 +12,7 @@ public interface UserService {
     List<User> findByNameLike(String keyword);
     List<User> search(String name, Integer minAge, Integer maxAge);
     void transfer(Integer fromId, Integer toId, BigDecimal amount);
+    User register(User user);
+    String login(String name, String password);
+
 }

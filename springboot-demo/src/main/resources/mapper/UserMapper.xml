@@ -7,12 +7,20 @@
         SELECT * FROM user WHERE id = #{id}
     </select>
 
+    <select id="findByName" resultType="User">
+        SELECT * FROM user WHERE name= #{name} LIMIT 1
+    </select>
+
+    <update id="updatePassword">
+        UPDATE  user SET  password= #{password} WHERE id=#{id}
+    </update>
+
     <select id="findAll" resultType="User">
         SELECT * FROM user
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user (name, age) VALUES (#{name}, #{age})
+        INSERT INTO user (name, age,password) VALUES (#{name}, #{age}, #{password})
     </insert>
 
     <update id="update">

@@ -9,10 +9,11 @@ public class User {
 
     @Min(value = 0, message = "年龄不能小于 0")
     @Max(value = 150, message = "年龄不能大于 150")
-    private int age;
+    private Integer age;
+    private String password;
     public User() {
     }
-    public User(Integer id, String name, int age) {
+    public User(Integer id, String name, Integer age) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -23,13 +24,15 @@ public class User {
     public String getName(){return name;}
     public void setName(String name){this.name = name;}
 
-    public int getAge(){return age;}
-    public void setAge(int age){this.age = age;}
+    public Integer getAge(){return age;}
+    public void setAge(Integer age){this.age = age;}
     @Override
     public String toString() {
         return "User{id=" + id + ", name=" + name + ", age=" + age + "}";
     }
     private BigDecimal money;
+    public String getPassword() {return password;}
+    public void setPassword(String password) {this.password = password;}
 
     public BigDecimal getMoney() { return money; }
     public void setMoney(BigDecimal money) { this.money = money; }

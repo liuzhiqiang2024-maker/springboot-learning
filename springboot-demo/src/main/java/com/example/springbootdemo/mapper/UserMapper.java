@@ -19,4 +19,6 @@ public interface UserMapper {
     List<User>search(@Param("name")String name,
                      @Param("minAge")Integer minAge,
                      @Param("maxAge")Integer maxAge);
+    User findByName(@Param("name")String name);
+    int updateByName(@Param("id")Integer id,@Param("password")String password);
 }
