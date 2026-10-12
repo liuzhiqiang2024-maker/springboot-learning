@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springbootdemo.mapper.ArticleMapper">
+
+    <select id="findById" resultType="Article">
+        SELECT * FROM article WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultType="Article">
+        SELECT * FROM article ORDER BY create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO article (title, content, author_id, category_id)
+        VALUES (#{title}, #{content}, #{authorId}, #{categoryId})
+    </insert>
+
+    <update id="update">
+        UPDATE article
+        SET title = #{title},
+        content = #{content},
+        category_id = #{categoryId}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM article WHERE id = #{id}
+    </delete>
+
+    <update id="increaseViewCount">
+        UPDATE article SET view_count = view_count + 1 WHERE id = #{id}
+    </update>
+
+    <update id="increaseLikeCount">
+        UPDATE article SET like_count = like_count + 1 WHERE id = #{id}
+    </update>
+
+</mapper>
