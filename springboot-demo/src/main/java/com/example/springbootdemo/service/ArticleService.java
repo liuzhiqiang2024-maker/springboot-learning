@@ -8,4 +8,7 @@ public interface ArticleService {
     Article findById(Integer id);
     List<Article> findAll();
     void increaseViewCount(Integer id);
+    List<Article> findByPage(int page,int size);
+    List<Article> searchByTitle(String keyword);
+    List<Article> searchAdvanced(Integer categoryId,Integer authorId);
 }

@@ -60,6 +60,19 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return article;
     }
+    @Override
+    public List<Article>findByPage(int page, int size) {
+        int offset = (page - 1) * size;
+        return articleMapper.findByPage(offset,size);
+    }
+    @Override
+    public List<Article> searchByTitle(String keyword) {
+        return articleMapper.searchByTitle(keyword);
+    }
+    @Override
+    public List<Article> searchAdvanced(Integer categoryId,Integer authorId) {
+        return articleMapper.searchAdvanced(categoryId,authorId);
+    }
 
     @Override
     public List<Article> findAll() {

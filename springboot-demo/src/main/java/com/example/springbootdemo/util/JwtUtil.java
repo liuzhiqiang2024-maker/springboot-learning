@@ -16,7 +16,7 @@ public class JwtUtil {
     private static final SecretKey KEY = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
     // 过期时间：1 小时
-    private static final long EXPIRE_MS = 60 * 60 * 1000;
+    private static final long EXPIRE_MS = 30L*24*60 * 60 * 1000;
 
     /**
      * 生成 JWT

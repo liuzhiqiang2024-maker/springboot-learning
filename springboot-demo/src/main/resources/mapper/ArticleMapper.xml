@@ -11,6 +11,27 @@
         SELECT * FROM article ORDER BY create_time DESC
     </select>
 
+    <select id="findByPage" resultType="Article">
+        SELECT * FROM article ORDER BY create_time DESC LIMIT #{offset},#{size}
+    </select>
+
+    <select id="searchByTitle" resultType="Article">
+        SELECT * FROM article WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY create_time DESC
+    </select>
+
+    <select id="searchAdvanced" resultType="Article">
+        SELECT * FROM article
+        <where>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="authorId != null">
+                AND author_id = #{authorId}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO article (title, content, author_id, category_id)
         VALUES (#{title}, #{content}, #{authorId}, #{categoryId})
