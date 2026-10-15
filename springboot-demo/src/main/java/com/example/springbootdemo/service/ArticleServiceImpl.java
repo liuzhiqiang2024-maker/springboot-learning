@@ -60,12 +60,14 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return article;
     }
+
     @Override
     public List<Article> findAll() {
         return articleMapper.findAll();
     }
     @Override
     public void increaseViewCount(Integer id) {
+        articleMapper.increaseViewCount(id);
         Article article=articleMapper.findById(id);
     }
 }

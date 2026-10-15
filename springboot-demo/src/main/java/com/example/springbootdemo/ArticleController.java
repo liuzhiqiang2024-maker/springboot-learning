@@ -35,6 +35,11 @@ public class ArticleController {
         log.info("查询所有文章");
         return Result.success(articleService.findAll());
     }
+    @GetMapping("/{id}")
+    public Result<Article> findById(@PathVariable Integer id) {
+        log.info("查询文章：id={}", id);
+        return Result.success(articleService.findById(id));
+    }
     @PostMapping("/{id}/view")
     public Result<Void>increaseView(@PathVariable Integer id) {
         log.info("浏览器+1：id={}",id);
