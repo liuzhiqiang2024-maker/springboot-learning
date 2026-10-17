@@ -52,14 +52,27 @@ public class ArticleServiceImpl implements ArticleService {
         //3.日志
         log.info("删除文章：id={}",id);
     }
+
+    @Override
+    public Article findDetailById(Integer id) {
+        // 这里必须调用 findDetailById
+        Article article = articleMapper.findDetailById(id);
+        if (article == null) {
+            throw new BusinessException(404, "文章不存在");
+        }
+        List<String> tags = articleMapper.findTagsByArticleId(id);
+        article.setTags(tags);
+        return article;
+    }
     @Override
     public Article findById(Integer id) {
-        Article article=articleMapper.findById(id);
-        if(article==null){
-            throw new BusinessException(404,"文章不存在");
+        Article article = articleMapper.findById(id);
+        if (article == null) {
+            throw new BusinessException(404, "文章不存在");
         }
         return article;
     }
+
     @Override
     public List<Article>findByPage(int page, int size) {
         int offset = (page - 1) * size;

@@ -6,6 +6,8 @@ import com.example.springbootdemo.entity.Article;
 @Mapper
 public interface ArticleMapper {
     Article findById(@Param("id") Integer id);
+    Article findDetailById(@Param("id") Integer id);
+    List<String>findTagsByArticleId(@Param("articleId") Integer id);
     List<Article> findAll();
     int insert(Article article);
     int update(Article article);

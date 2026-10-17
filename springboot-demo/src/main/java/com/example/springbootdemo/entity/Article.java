@@ -2,8 +2,12 @@ package com.example.springbootdemo.entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 public class Article {
     private Integer id;
+    private String authorName;
+    private String categoryName;
+    private List<String> tags;
     @NotBlank(message = "标题不能为空")
     private String title;
     @NotBlank(message = "内容不能为空")
@@ -18,6 +22,14 @@ public class Article {
 
     public Article() {
     }
+    public String getAuthorName() { return authorName; }
+    public void setAuthorName(String authorName) { this.authorName = authorName; }
+
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+
+    public List<String> getTags() { return tags; }
+    public void setTags(List<String> tags) { this.tags = tags; }
     public Integer getId() {return id;}
     public void setId(Integer id) {this.id = id;}
     public String getTitle() {return title;}

@@ -52,6 +52,7 @@ public class ArticleController {
         articleService.increaseViewCount(id);
         return Result.success();
     }
+
     @PutMapping("/{id}")
     public Result<Article> update(@PathVariable Integer id, @Valid @RequestBody Article article) {
         log.info("修改文章：id={}",id);
@@ -67,7 +68,7 @@ public class ArticleController {
     @GetMapping("/{id}")
     public Result<Article> findById(@PathVariable Integer id) {
         log.info("查询文章：id={}", id);
-        return Result.success(articleService.findById(id));
+        return Result.success(articleService.findDetailById(id));
     }
 }
 
