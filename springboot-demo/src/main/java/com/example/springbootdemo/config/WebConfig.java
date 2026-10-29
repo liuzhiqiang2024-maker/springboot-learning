@@ -21,7 +21,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/user/register",
                         "/jwt/**",
                         "/redis/**",
-                        "/actuator/**"
+                        "/actuator/**",
+                        "/uploads/**"
                 );
     }
 }

@@ -25,26 +25,36 @@ public class ArticleController {
         log.info("新增文章：title={}", article.getTitle());
         return Result.success(articleService.add(article));
     }
+    // 注入 RedisTemplate
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    // 1. 点赞接口
     @PostMapping("/{id}/like")
     public Result<Void> like(@PathVariable Integer id, HttpServletRequest request) {
+        // 从拦截器里拿出当前登录用户的 ID（之前拦截器放进去的）
         String userId = (String) request.getAttribute("userId");
         if (userId == null) {
             throw new BusinessException(401, "请先登录");
         }
+
         String redisKey = "article:like:" + id;
 
+        // 把 userId 放进 Set 里（Redis 的 SADD 命令）
         Long added = stringRedisTemplate.opsForSet().add(redisKey, userId);
 
         if (added != null && added > 0) {
-            log.info("用户{}给文章{}点赞成功", userId, id);
+            log.info("用户 {} 给文章 {} 点赞成功", userId, id);
+            // 真实项目中，这里通常会发送一个消息到 RabbitMQ 或异步去 MySQL 里 +1
+            // 今天我们简化：直接顺便把 MySQL 的 like_count 也更新一下
             articleMapper.increaseLikeCount(id);
             return Result.success();
         } else {
             throw new BusinessException(400, "你已经点过赞了");
         }
     }
+
+    // 2. 查询是否已点赞
     @GetMapping("/{id}/like/status")
     public Result<Boolean> likeStatus(@PathVariable Integer id, HttpServletRequest request) {
         String userId = (String) request.getAttribute("userId");
@@ -52,8 +62,10 @@ public class ArticleController {
             return Result.success(false);
         }
         String redisKey = "article:like:" + id;
-        Boolean isMatch = stringRedisTemplate.opsForSet().isMember(redisKey, userId);
-        return Result.success(isMatch!=null&&isMatch);
+
+        // 判断 userId 是否在这个 Set 里
+        Boolean isMember = stringRedisTemplate.opsForSet().isMember(redisKey, userId);
+        return Result.success(isMember != null && isMember);
     }
 
     @GetMapping("/list")
