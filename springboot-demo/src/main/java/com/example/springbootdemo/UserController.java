@@ -5,6 +5,7 @@ import com.example.springbootdemo.entity.User;
 import com.example.springbootdemo.exception.BusinessException;
 import com.example.springbootdemo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import com.example.springbootdemo.config.RabbitMQConfig;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,19 @@ public class UserController {
     private UserService userService;
     @Value("${file.upload.path}")
     private String uploadPath;
+
+    @Autowired
+    private org.springframework.amqp.rabbit.core.RabbitTemplate rabbitTemplate;
+    @GetMapping("/test/mq")
+    public Result<String> testMq() {
+        String message = "Hello RabbitMQ! 我是来自博客系统的测试消息";
+
+        // 发送到队列
+        rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, message);
+
+        log.info("发送消息成功：{}", message);
+        return Result.success("消息已发送");
+    }
 
     @PostMapping("/upload/avatar")
     public Result <String> uploadAvatar(@RequestParam("file") MultipartFile file, HttpServletRequest request){
