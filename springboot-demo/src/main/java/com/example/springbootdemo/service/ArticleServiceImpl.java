@@ -1,4 +1,5 @@
 package com.example.springbootdemo.service;
+import com.example.springbootdemo.config.RabbitMQConfig;
 import com.example.springbootdemo.entity.Article;
 import com.example.springbootdemo.exception.BusinessException;
 import com.example.springbootdemo.mapper.ArticleMapper;
@@ -19,6 +20,8 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleMapper articleMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private org.springframework.amqp.rabbit.core.RabbitTemplate rabbitTemplate;
 
 
     @Override
@@ -29,6 +32,14 @@ public class ArticleServiceImpl implements ArticleService {
         }
         //2.插入
         articleMapper.insert(article);
+        // 发送消息开始
+        String messageContent="文章发布成功！ID:"+article.getId()+",标题："+article.getTitle();
+        // 1. 发给 Direct 交换机（去发邮件）
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_DIRECT,RabbitMQConfig.ROUTING_KEY_EMAIL,messageContent);
+        // 2. 发给 Fanout 交换机（广播给站内信和积分）
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_FANOUT,"",messageContent);
+        log.info("发送 MQ 消息：{}", messageContent);
+// 发送消息结束
         //3.日志
         log.info("新增文章：id={},title={}",article.getId(),article.getTitle());
         //4.返回

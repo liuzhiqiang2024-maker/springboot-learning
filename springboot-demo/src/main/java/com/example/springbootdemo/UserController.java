@@ -29,16 +29,7 @@ public class UserController {
 
     @Autowired
     private org.springframework.amqp.rabbit.core.RabbitTemplate rabbitTemplate;
-    @GetMapping("/test/mq")
-    public Result<String> testMq() {
-        String message = "Hello RabbitMQ! 我是来自博客系统的测试消息";
 
-        // 发送到队列
-        rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, message);
-
-        log.info("发送消息成功：{}", message);
-        return Result.success("消息已发送");
-    }
 
     @PostMapping("/upload/avatar")
     public Result <String> uploadAvatar(@RequestParam("file") MultipartFile file, HttpServletRequest request){
