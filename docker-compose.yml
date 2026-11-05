@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # 1. 数据库
+  blog-mysql:
+    image: mysql:8.0
+    container_name: blog-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: blog_db
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  # 2. 缓存
+  blog-redis:
+    image: redis:7.0
+    container_name: blog-redis
+    ports:
+      - "6379:6379"
+
+  # 3. 消息队列
+  blog-rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: blog-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  # 4. 你的 SpringBoot 应用
+  blog-app:
+    build: .
+    container_name: blog-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - blog-mysql
+      - blog-redis
+      - blog-rabbitmq
