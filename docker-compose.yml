@@ -1,7 +1,4 @@
-version: '3.8'
-
 services:
-  # 1. 数据库
   blog-mysql:
     image: mysql:8.0
     container_name: blog-mysql
@@ -12,16 +9,15 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      # 把当前目录下的 init.sql 挂载进去，实现自动建表
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  # 2. 缓存
   blog-redis:
     image: redis:7.0
     container_name: blog-redis
     ports:
       - "6379:6379"
 
-  # 3. 消息队列
   blog-rabbitmq:
     image: rabbitmq:3.12-management
     container_name: blog-rabbitmq
@@ -32,13 +28,26 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
 
-  # 4. 你的 SpringBoot 应用
   blog-app:
     build: .
     container_name: blog-app
     ports:
       - "8080:8080"
+    # 用环境变量强制覆盖连接地址
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://blog-mysql:3306/blog_db?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      - SPRING_DATA_REDIS_HOST=blog-redis
+      - SPRING_RABBITMQ_HOST=blog-rabbitmq
     depends_on:
       - blog-mysql
       - blog-redis
       - blog-rabbitmq
+
+  blog-nginx:
+    image: nginx:alpine
+    container_name: blog-nginx
+    ports:
+      - "80:80"
+
+    depends_on:
+      - blog-app
